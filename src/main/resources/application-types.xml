@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="output" format="xml">
+      <types:example format="xml" element="response" location="examples/response.xml"/>
+    </types:type>
+    <types:type name="output_formate" format="json">
+      <types:shape format="weave" example="examples/new 2.json"><![CDATA[%dw 2.0
+
+type output_formate = {|
+  empid: Number {"typeId": "int"}, 
+  empname: String, 
+  empstatus: String, 
+  employeephone: Number {"typeId": "int"}
+|} {"example": "{\\\"empid\\\":100,\\\"empname\\\":\\\"bal\\\",\\\"empstatus\\\":\\\"a\\\",\\\"employeephone\\\":444444}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="output-formate" format="json">
+      <types:shape format="weave" example="examples/new 3-1.json"><![CDATA[%dw 2.0
+
+type output_formate = Array<{|  customerid: Number {"typeId": "int"},   customername: String,   customermail: String,   customeraddress: String,   customerteliphone: Number {"typeId": "int"}|}> {"example": "[{\\\"customerid\\\":1,\\\"customername\\\":\\\"balakrishna\\\",\\\"customermail\\\":\\\"bala@gmail.com\\\",\\\"customeraddress\\\":\\\"palamaner\\\",\\\"customerteliphone\\\":2134342},{\\\"customername\\\":\\\"balakrishna\\\",\\\"customermail\\\":\\\"bala@gmail.com\\\",\\\"customeraddress\\\":\\\"palamaner\\\",\\\"customerteliphone\\\":2134342,\\\"customerid\\\":1},{\\\"customername\\\":\\\"balakrishna\\\",\\\"customermail\\\":\\\"bala@gmail.com\\\",\\\"customeraddress\\\":\\\"palamaner\\\",\\\"customerteliphone\\\":2134342,\\\"customerid\\\":1}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7a393a77-53f1-4eb7-82fd-daa2acc2dc4c">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#d3c0859a-30a0-489a-be3e-a71ec7c12f8f">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output_formate"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#3092de40-1438-4d9d-98e1-66896bc37c01">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output-formate"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

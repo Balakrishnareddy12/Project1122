@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="Copy_of_fetch_recordsFlow1-chinna" doc:id="52ca2e58-9d18-4fe4-8441-40d1937169c8" >
+		<http:listener doc:name="Listener" doc:id="6b7c7b03-7d65-4242-be7b-724d0e4c4097" config-ref="HTTP_Listener_config" path="fetch-employess" />
+		<logger level="INFO" doc:name="entry-Log" doc:id="83c0f7e1-c894-4e12-819d-6c6539893866" message="flow has been started" />
+		<db:select doc:name="fetch-all-records" doc:id="2bbcab15-3811-4002-8de7-d24df71fcc6e" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select id,name,mail,address,teliphone from customerdetails ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="output" doc:id="68167470-bb25-4922-9fdb-d4fa000384f1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	customerid: payload01.id,
+	customername: payload01.name default "",
+	customermail: payload01.mail default "",
+	customeraddress: payload01.address default "",
+	customerteliphone: payload01.teliphone default 0
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

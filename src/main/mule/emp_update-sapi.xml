@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="emp_update-sapiFlow1" doc:id="252ca987-6427-4f0f-bf35-68d876f66783" >
+		<http:listener doc:name="Listener" doc:id="4af13e5c-eb93-4f0d-9d88-971dce610345" config-ref="HTTP_Listener_config" path="update_harinath"/>
+		<logger level="INFO" doc:name="Logger" doc:id="712b101a-4d17-40a3-a601-3bfb8c5fa37d" message="flow has been started"/>
+		<db:update doc:name="Update" doc:id="b6e5f3aa-bc9f-44fd-b5e1-0160c68b8a3a" config-ref="Database_Config">
+			<db:sql ><![CDATA[update customerdetails set name= :name, mail= :mail where id= :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	name: payload.customername,
+	mail: payload.mailid,
+	id: payload.customerid
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="2a18a56d-747d-4e93-81a0-258d03ff23e5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"status": 200,
+	"message": "updated"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="emp_update-sapiFlow" doc:id="d2cdf58c-f5b9-4725-9fd0-d8d753167dc4" >
+		<http:listener doc:name="Listener" doc:id="604e5435-52bb-4dde-b797-0ff76b236224" config-ref="HTTP_Listener_config" path="upadte-employee" allowedMethods="post"/>
+		<logger level="INFO" doc:name="entry-Log" doc:id="9be01ba6-6218-4d6d-83b5-ef824f1840b1" message="employee update flow: #[payload]"/>
+		<db:update doc:name="Update" doc:id="43c4744f-2d93-4c59-874b-5601bffdb4b2" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE emp
+SET emp_status= :emp_status
+WHERE emp_id= :emp_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	emp_status: payload.emp.empstatus,
+	emp_id: payload.emp.empid
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="7a393a77-53f1-4eb7-82fd-daa2acc2dc4c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	response: {
+		status: 200,
+		message: "success"
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="end-Log" doc:id="03d8f1ea-cd5d-46d8-8fe6-e25ea5e2eb2b" message="updated successfully for given data: #[payload]"/>
+	</flow>
+</mule>

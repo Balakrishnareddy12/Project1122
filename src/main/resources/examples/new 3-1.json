@@ -1,0 +1,23 @@
+[
+{	
+	"customerid": 1,
+	"customername": "balakrishna",
+	"customermail": "bala@gmail.com",
+	"customeraddress": "palamaner",
+	"customerteliphone": 2134342
+},
+{
+	"customername": "balakrishna",
+	"customermail": "bala@gmail.com",
+	"customeraddress": "palamaner",
+	"customerteliphone": 2134342,
+	"customerid": 1
+},
+{
+	"customername": "balakrishna",
+	"customermail": "bala@gmail.com",
+	"customeraddress": "palamaner",
+	"customerteliphone": 2134342,
+	"customerid": 1
+}
+]
